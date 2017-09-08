@@ -1,7 +1,8 @@
 package controller
 
 import (
-	"github.com/jtrudell/go-webapp/viewmodel"
+	"github.com/jtrudell/go-fakesgiving/model"
+	"github.com/jtrudell/go-fakesgiving/viewmodel"
 	"html/template"
 	"log"
 	"net/http"
@@ -25,7 +26,14 @@ func (s signup) handleSignup(w http.ResponseWriter, r *http.Request) {
 		}
 		name := r.PostFormValue("name")
 		food := r.PostFormValue("food")
-		viewData.Name, viewData.Food = name, food
+		viewData.Food = food
+
+		user := model.NewUser(name)
+		viewData.User = user
+		err = user.Save()
+		if err != nil {
+			log.Println("Something went wrong:", err)
+		}
 	}
 	s.signupTemplate.Execute(w, viewData)
 }

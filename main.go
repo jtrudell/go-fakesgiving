@@ -1,15 +1,21 @@
 package main
 
 import (
-	"github.com/jtrudell/go-webapp/controller"
+	"database/sql"
+	"github.com/jtrudell/go-fakesgiving/controller"
+	"github.com/jtrudell/go-fakesgiving/model"
+	_ "github.com/lib/pq"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
 	templates := populateTemplates()
+	db := connectToDatabase()
+	defer db.Close()
 	controller.Init(templates)
 	http.ListenAndServe(":8080", nil)
 }
@@ -53,4 +59,13 @@ func populateTemplates() map[string]*template.Template {
 	}
 
 	return result
+}
+
+func connectToDatabase() *sql.DB {
+	db, err := sql.Open("postgres", "user=jtrudell dbname=fakesgiving sslmode=disable")
+	if err != nil {
+		log.Fatalln("Unable to connect to database:", err)
+	}
+	model.SetDatabase(db)
+	return db
 }

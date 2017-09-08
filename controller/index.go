@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/jtrudell/go-webapp/viewmodel"
+	"github.com/jtrudell/go-fakesgiving/viewmodel"
 	"html/template"
 	"net/http"
 )
