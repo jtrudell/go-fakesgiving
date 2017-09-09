@@ -8,12 +8,14 @@ import (
 type User struct {
 	ID        int
 	Name      string
+	Food      string
 	CreatedAt *time.Time
 }
 
-func NewUser(name string) User {
+func NewUser(name, food string) User {
 	return User{
 		Name: name,
+		Food: food,
 	}
 }
 
@@ -26,13 +28,14 @@ func AllUsers() []User {
 	defer rows.Close()
 
 	for rows.Next() {
-		var name string
 		var id int
+		var name string
+		var food string
 		var createdAt *time.Time
-		if err := rows.Scan(&id, &name, &createdAt); err != nil {
+		if err := rows.Scan(&id, &name, &food, &createdAt); err != nil {
 			log.Fatal(err)
 		}
-		users = append(users, User{id, name, createdAt})
+		users = append(users, User{id, name, food, createdAt})
 	}
 
 	if err := rows.Err(); err != nil {
@@ -44,12 +47,11 @@ func AllUsers() []User {
 
 func (u User) Save() error {
 	_, err := db.Exec(`
-	INSERT INTO users (name)
-	VALUES ($1);`, u.Name)
+	INSERT INTO users (name, food)
+	VALUES ($1, $2);`, u.Name, u.Food)
 
 	if err != nil {
 		log.Printf("Could not save user with name %v: %v", u.Name, err)
 	}
-	AllUsers()
 	return err
 }

@@ -5,8 +5,8 @@ import "github.com/jtrudell/go-fakesgiving/model"
 type Signup struct {
 	Title   string
 	Heading string
-	Food    string
 	User    model.User
+	Users   []model.User
 }
 
 func NewSignup() Signup {

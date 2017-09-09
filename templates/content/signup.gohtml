@@ -17,8 +17,18 @@
         <div class="column">
           <p>Thank you, {{.User.Name}}</p>
           <p>You are bringing:</p>
-          <p>{{.Food}}</p>
+          <p>{{.User.Food}}</p>
         </div>
+      {{end}}
+      </div>
+      <div class="row">
+      {{if .Users}}
+        <ul class="list-group">
+        <li class="list-group-item">Here's what other people are bringing:</li>
+        {{range .Users}}
+          <li class="list-group-item">{{.ID}}. {{.Name}} agreed to bring {{.Food}} at {{.CreatedAt}}</li>
+        {{end}}
+        </ul>
       {{end}}
       </div>
     </div>
