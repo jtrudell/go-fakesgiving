@@ -12,12 +12,17 @@ import (
 	"os"
 )
 
+const (
+	port   = ":8080"
+	dbname = "fakesgiving"
+)
+
 func main() {
 	templates := populateTemplates()
 	db := connectToDatabase()
 	defer db.Close()
 	controller.Init(templates)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(port, nil)
 }
 
 // populateTemplates returns a map of file name keys and template values
@@ -61,11 +66,33 @@ func populateTemplates() map[string]*template.Template {
 	return result
 }
 
+// connectToDatabase opens a postgres database named fakesgiving
+// and creates the users table if it doesn't exist. If then sets
+// the fakesgiving database as the db for the model to use
 func connectToDatabase() *sql.DB {
-	db, err := sql.Open("postgres", "user=jtrudell dbname=fakesgiving sslmode=disable")
+	db := openDatabase()
+	createUsersTable(db)
+	model.SetDatabase(db)
+	return db
+}
+
+// TODO: move postgres variables to config
+func openDatabase() *sql.DB {
+	db, err := sql.Open("postgres", "user=jentrudell dbname=fakesgiving sslmode=disable")
 	if err != nil {
 		log.Fatalln("Unable to connect to database:", err)
 	}
-	model.SetDatabase(db)
 	return db
+}
+
+func createUsersTable(db *sql.DB) {
+	_, err := db.Exec(`
+	CREATE TABLE IF NOT EXISTS USERS(
+  ID SERIAL UNIQUE PRIMARY KEY NOT NULL,
+  NAME TEXT NOT NULL,
+  CREATED_AT TIMESTAMP DEFAULT NOW() NOT NULL);`)
+
+	if err != nil {
+		log.Fatalln("Could not create Users table: %v", err)
+	}
 }
