@@ -6,8 +6,8 @@ import (
 )
 
 type User struct {
-	Name      string
 	ID        int
+	Name      string
 	CreatedAt *time.Time
 }
 
@@ -15,6 +15,31 @@ func NewUser(name string) User {
 	return User{
 		Name: name,
 	}
+}
+
+func AllUsers() []User {
+	users := []User{}
+	rows, err := db.Query(`SELECT * FROM users;`)
+	if err != nil {
+		log.Fatalln("Could not get Users %v", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var name string
+		var id int
+		var createdAt *time.Time
+		if err := rows.Scan(&id, &name, &createdAt); err != nil {
+			log.Fatal(err)
+		}
+		users = append(users, User{id, name, createdAt})
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	return users
 }
 
 func (u User) Save() error {
@@ -25,5 +50,6 @@ func (u User) Save() error {
 	if err != nil {
 		log.Printf("Could not save user with name %v: %v", u.Name, err)
 	}
+	AllUsers()
 	return err
 }
