@@ -30,7 +30,7 @@ func main() {
 func populateTemplates() map[string]*template.Template {
 	result := make(map[string]*template.Template)
 	const basePath = "templates"
-	layout := template.Must(template.ParseFiles(basePath + "/_layout.gohtml"))
+	layout := template.Must(template.ParseFiles(basePath + "/_layout.html"))
 
 	dir, err := os.Open(basePath + "/content")
 	if err != nil {
