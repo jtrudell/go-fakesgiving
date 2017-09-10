@@ -10,18 +10,26 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
+// type Config struct {
+// 	Port   string
+// 	DBName string
+// 	DBUser string
+// }
+
 const (
-	port   = ":3001"
-	dbname = "fakesgiving"
+	envFile = ".env"
 )
 
 func main() {
+	setEnvironment()
 	templates := populateTemplates()
 	db := connectToDatabase()
 	defer db.Close()
 	controller.Init(templates)
+	port := os.Getenv("PORT")
 	http.ListenAndServe(port, nil)
 }
 
@@ -66,6 +74,31 @@ func populateTemplates() map[string]*template.Template {
 	return result
 }
 
+// TODO: move to its own package; use config struct
+func setEnvironment() {
+	file, err := os.Open(envFile)
+	if err != nil {
+		panic("Failed to open " + envFile)
+	}
+
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		panic("Failed to read content from " + envFile)
+	}
+	envVars := strings.Split(string(content), "\n")
+	// config := Config{}
+	for _, envVar := range envVars {
+		x := strings.Split(envVar, "=")
+		if len(x) > 1 {
+			err := os.Setenv(x[0], x[1])
+			if err != nil {
+				panic("Could not set environment variable" + x[0])
+			}
+		}
+	}
+	file.Close()
+}
+
 // connectToDatabase opens a postgres database named fakesgiving
 // and creates the users table if it doesn't exist. If then sets
 // the fakesgiving database as the db for the model to use
@@ -76,9 +109,10 @@ func connectToDatabase() *sql.DB {
 	return db
 }
 
-// TODO: move postgres variables to config
 func openDatabase() *sql.DB {
-	db, err := sql.Open("postgres", "user=jentrudell dbname=fakesgiving sslmode=disable")
+	user := os.Getenv("USER")
+	dbname := os.Getenv("DBNAME")
+	db, err := sql.Open("postgres", "user="+user+" dbname="+dbname+" sslmode=disable")
 	if err != nil {
 		log.Fatalln("Unable to connect to database:", err)
 	}
