@@ -1,6 +1,7 @@
   {{define "content"}}
-    <div class="jumbotron">
-      <h1 class="display-3">{{.Heading}}</h1>
+  <div class="row">
+    <div class="col-md-6">
+      <h1 class="display-5">{{.Heading}}</h1>
       <form action="/signup" method="post">
         <div class="form-group">
           <input type="text" class="form-control" name="name" id="name" placeholder="Your name">
@@ -11,25 +12,24 @@
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
-    <div class="container">
-      <div class="row">
-      {{if .User.Name}}
-        <div class="column">
-          <p>Thank you, {{.User.Name}}</p>
-          <p>You are bringing:</p>
-          <p>{{.User.Food}}</p>
-        </div>
-      {{end}}
-      </div>
-      <div class="row">
+    <div class="col-md-6">
       {{if .Users}}
-        <ul class="list-group">
-        <li class="list-group-item">Here's what other people are bringing:</li>
-        {{range .Users}}
-          <li class="list-group-item">{{.ID}}. {{.Name}} agreed to bring {{.Food}} at {{.CreatedAt}}</li>
+      <div class="card">
+        <div class="card-header">
+        {{if .User.Name}}
+          Thank you, {{.User.Name}}. You are bringing {{.User.Food}}.
         {{end}}
-        </ul>
-      {{end}}
+          Here's what other people are bringing:
+        </div>
+        <div class="card-body">
+          <ul class="list-group">
+          {{range .Users}}
+            <li class="list-group-item">{{.ID}}. {{.Name}} agreed to bring {{.Food}} at {{.CreatedAt}}</li>
+          {{end}}
+          </ul>
+        </div>
       </div>
+      {{end}}
     </div>
+  </div>
   {{end}}

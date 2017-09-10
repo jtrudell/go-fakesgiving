@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	port   = ":8080"
+	port   = ":3001"
 	dbname = "fakesgiving"
 )
 

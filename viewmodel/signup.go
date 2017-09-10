@@ -13,6 +13,6 @@ func NewSignup() Signup {
 
 	return Signup{
 		Title:   NewBase().Title,
-		Heading: "Sign up for some stuff",
+		Heading: "What will you bring?",
 	}
 }
