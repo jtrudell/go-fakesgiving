@@ -90,12 +90,17 @@ func openDatabase() *sql.DB {
 }
 
 func createUsersTable(db *sql.DB) {
-	_, err := db.Exec(`
-	CREATE TABLE IF NOT EXISTS USERS(
-  ID SERIAL UNIQUE PRIMARY KEY NOT NULL,
-  NAME TEXT NOT NULL,
-  FOOD TEXT NOT NULL,
-  CREATED_AT TIMESTAMP DEFAULT NOW() NOT NULL);`)
+	err := db.Ping()
+	if err != nil {
+		log.Fatalln("Database not available %v", err)
+	}
+
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS USERS(
+		ID SERIAL UNIQUE PRIMARY KEY NOT NULL,
+		NAME TEXT NOT NULL,
+		FOOD TEXT NOT NULL,
+		CREATED_AT TIMESTAMP DEFAULT NOW() NOT NULL);`)
 
 	if err != nil {
 		log.Fatalln("Could not create Users table: %v", err)

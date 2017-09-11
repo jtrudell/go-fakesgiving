@@ -21,6 +21,11 @@ func NewUser(name, food string) User {
 
 func AllUsers() []User {
 	users := []User{}
+	err := db.Ping()
+	if err != nil {
+		log.Fatalln("Database not available %v", err)
+	}
+
 	rows, err := db.Query(`SELECT * FROM users;`)
 	if err != nil {
 		log.Fatalln("Could not get Users %v", err)
@@ -46,9 +51,14 @@ func AllUsers() []User {
 }
 
 func (u User) Save() error {
-	_, err := db.Exec(`
-	INSERT INTO users (name, food)
-	VALUES ($1, $2);`, u.Name, u.Food)
+	err := db.Ping()
+	if err != nil {
+		log.Fatalln("Database not available %v", err)
+	}
+
+	_, err = db.Exec(`
+		INSERT INTO users (name, food)
+		VALUES ($1, $2);`, u.Name, u.Food)
 
 	if err != nil {
 		log.Printf("Could not save user with name %v: %v", u.Name, err)
