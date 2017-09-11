@@ -27,7 +27,10 @@ func main() {
 	db := connectToDatabase()
 	defer db.Close()
 	controller.Init(templates)
-	http.ListenAndServe(port, nil)
+	err := http.ListenAndServe(port, nil)
+	if err != nil {
+		log.Fatalln("Server failed to start:", err)
+	}
 }
 
 // populateTemplates returns a map of file name keys and template values
