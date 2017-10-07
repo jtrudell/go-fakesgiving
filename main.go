@@ -2,15 +2,16 @@ package main
 
 import (
 	"database/sql"
-	"github.com/jtrudell/go-fakesgiving/config"
-	"github.com/jtrudell/go-fakesgiving/controller"
-	"github.com/jtrudell/go-fakesgiving/model"
-	_ "github.com/lib/pq"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/jtrudell/go-fakesgiving/config"
+	"github.com/jtrudell/go-fakesgiving/controller"
+	"github.com/jtrudell/go-fakesgiving/model"
+	_ "github.com/lib/pq"
 )
 
 var port string
@@ -85,7 +86,16 @@ func connectToDatabase() *sql.DB {
 }
 
 func openDatabase() *sql.DB {
-	db, err := sql.Open("postgres", "user="+dbuser+" dbname="+dbname+" sslmode=disable")
+	var db *sql.DB
+	var err error
+
+	dburl := os.Getenv("DATABASE_URL")
+	if dburl == "" {
+		db, err = sql.Open("postgres", "user="+dbuser+" dbname="+dbname+" sslmode=disable")
+	} else {
+		db, err = sql.Open("postgres", dburl)
+	}
+
 	if err != nil {
 		log.Fatalln("Unable to connect to database:", err)
 	}
