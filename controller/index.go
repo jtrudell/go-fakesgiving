@@ -1,9 +1,10 @@
 package controller
 
 import (
-	"github.com/jtrudell/go-fakesgiving/viewmodel"
 	"html/template"
 	"net/http"
+
+	"github.com/jtrudell/go-fakesgiving/viewmodel"
 )
 
 type index struct {
