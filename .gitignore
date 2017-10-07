@@ -15,3 +15,6 @@
 
 # gin live reload builds
 gin-bin
+
+# secrets
+.secrets

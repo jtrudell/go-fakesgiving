@@ -8,6 +8,7 @@ Toy web app allowing people to signup to bring things to Fakesgiving (aka Fake T
 
 ## Install
 1. Edit the .env file in root directory to replace "DBUSER=jentrudell" with "DBUSER=your postgres username"
-2. Create a postgres database table called "fakesgiving" (or whatever name you give the database in .env)
-3. Start up the app: `go run main.go`
-4. Go to localhost:8080 in your browser (or whatever port you set in .env)
+2. You need an API key from Giphy. They are free. Once you have it, set it in .env
+3. Create a postgres database table called "fakesgiving" (or whatever name you give the database in .env)
+4. Start up the app: `go run main.go`
+5. Go to localhost:8080 in your browser (or whatever port you set in .env)
