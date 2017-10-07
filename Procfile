@@ -1,1 +1,2 @@
-web: go-fakesgiving
+web: go-fakesgiving -port=$PORT
+
