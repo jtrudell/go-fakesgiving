@@ -2,9 +2,6 @@
 	"ImportPath": "github.com/jtrudell/go-fakesgiving",
 	"GoVersion": "go1.9",
 	"GodepVersion": "v79",
-	"Packages": [
-		"./..."
-	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/lib/pq",

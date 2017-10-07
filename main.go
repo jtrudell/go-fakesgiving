@@ -2,15 +2,16 @@ package main
 
 import (
 	"database/sql"
-	"github.com/jtrudell/go-fakesgiving/config"
-	"github.com/jtrudell/go-fakesgiving/controller"
-	"github.com/jtrudell/go-fakesgiving/model"
-	_ "github.com/lib/pq"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/jtrudell/go-fakesgiving/config"
+	"github.com/jtrudell/go-fakesgiving/controller"
+	"github.com/jtrudell/go-fakesgiving/model"
+	_ "github.com/lib/pq"
 )
 
 var port string
@@ -18,8 +19,13 @@ var dbname string
 var dbuser string
 
 func init() {
-	env := config.Setup()
-	port, dbname, dbuser = env.Port, env.DBName, env.DBUser
+	// if not deployed to heroku, setup port and db off of local env
+	if os.Getenv("WEB_ENV") != "heroku" {
+		env := config.Setup()
+		port, dbname, dbuser = env.Port, env.DBName, env.DBUser
+	} else {
+		port = os.Getenv("PORT")
+	}
 }
 
 func main() {
@@ -27,7 +33,7 @@ func main() {
 	db := connectToDatabase()
 	defer db.Close()
 	controller.Init(templates)
-	err := http.ListenAndServe(port, nil)
+	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatalln("Server failed to start:", err)
 	}
@@ -85,7 +91,16 @@ func connectToDatabase() *sql.DB {
 }
 
 func openDatabase() *sql.DB {
-	db, err := sql.Open("postgres", "user="+dbuser+" dbname="+dbname+" sslmode=disable")
+	var db *sql.DB
+	var err error
+
+	dburl := os.Getenv("DATABASE_URL")
+	if dburl == "" {
+		db, err = sql.Open("postgres", "user="+dbuser+" dbname="+dbname+" sslmode=disable")
+	} else {
+		db, err = sql.Open("postgres", dburl)
+	}
+
 	if err != nil {
 		log.Fatalln("Unable to connect to database:", err)
 	}
