@@ -21,6 +21,9 @@ var dbuser string
 func init() {
 	env := config.Setup()
 	port, dbname, dbuser = env.Port, env.DBName, env.DBUser
+	if os.Getenv("PORT") != ":8080" {
+		port = ":" + os.Getenv("PORT")
+	}
 }
 
 func main() {
