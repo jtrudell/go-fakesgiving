@@ -8,21 +8,19 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/jtrudell/go-fakesgiving/config"
 	"github.com/jtrudell/go-fakesgiving/controller"
 	"github.com/jtrudell/go-fakesgiving/model"
 	_ "github.com/lib/pq"
 )
 
 var port string
-var dbname string
-var dbuser string
 
 func init() {
-	env := config.Setup()
-	port, dbname, dbuser = env.Port, env.DBName, env.DBUser
-	if os.Getenv("PORT") != ":8080" {
-		port = ":" + os.Getenv("PORT")
+	// env := config.Setup()
+	// port, dbname, dbuser = env.Port, env.DBName, env.DBUser
+	port = os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
 	}
 }
 
@@ -31,7 +29,7 @@ func main() {
 	db := connectToDatabase()
 	defer db.Close()
 	controller.Init(templates)
-	err := http.ListenAndServe(port, nil)
+	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatalln("Server failed to start:", err)
 	}
@@ -94,6 +92,8 @@ func openDatabase() *sql.DB {
 
 	dburl := os.Getenv("DATABASE_URL")
 	if dburl == "" {
+		dbname := "fakesgiving"
+		dbuser := "jentrudell"
 		db, err = sql.Open("postgres", "user="+dbuser+" dbname="+dbname+" sslmode=disable")
 	} else {
 		db, err = sql.Open("postgres", dburl)
