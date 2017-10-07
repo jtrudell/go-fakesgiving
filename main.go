@@ -8,19 +8,23 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/jtrudell/go-fakesgiving/config"
 	"github.com/jtrudell/go-fakesgiving/controller"
 	"github.com/jtrudell/go-fakesgiving/model"
 	_ "github.com/lib/pq"
 )
 
 var port string
+var dbname string
+var dbuser string
 
 func init() {
-	// env := config.Setup()
-	// port, dbname, dbuser = env.Port, env.DBName, env.DBUser
-	port = os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	// if not deployed to heroku, setup port and db off of local env
+	if os.Getenv("WEB_ENV") != "heroku" {
+		env := config.Setup()
+		port, dbname, dbuser = env.Port, env.DBName, env.DBUser
+	} else {
+		port = os.Getenv("PORT")
 	}
 }
 
@@ -92,8 +96,6 @@ func openDatabase() *sql.DB {
 
 	dburl := os.Getenv("DATABASE_URL")
 	if dburl == "" {
-		dbname := "fakesgiving"
-		dbuser := "jentrudell"
 		db, err = sql.Open("postgres", "user="+dbuser+" dbname="+dbname+" sslmode=disable")
 	} else {
 		db, err = sql.Open("postgres", dburl)
