@@ -10,7 +10,7 @@ func TestNewSignup(t *testing.T) {
 	actual := NewSignup()
 	year := time.Now().Year()
 	title := "Fakesgiving " + strconv.Itoa(year)
-	expected := Signup{Title: title, Heading: "What will you bring?"}
+	expected := Signup{Title: title, Heading: "What are you bringing?"}
 	if actual.Title != expected.Title {
 		t.Errorf("actual title %v did not equal expected title %v", actual.Title, expected.Title)
 	}

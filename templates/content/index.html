@@ -1,15 +1,12 @@
   {{define "content"}}
     <div class="jumbotron">
       <div class="row">
-        <div class="col-lg-6 col-md-12">
+        <div class="col-lg-6 col-md-12 text-center">
           <h1 class="display-4">It's {{.Title}}!</h1>
-          <p class="lead">Click to sign up</p>
-          <p>
-            <a class="btn btn-lg btn-primary" href="/signup" role="button">Sign up</a>
-          </p>
+          <p><a class="btn btn-lg btn-primary" href="/signup" role="button">Sign up</a></p>
         </div>
         <div class="col-lg-6 col-md-12">
-          <img class="giphy" src={{.ImageUrl}} alt="thanksgiving from giphy" />
+          <img id="giphy" src={{.ImageUrl}} alt="thanksgiving from giphy" />
         </div>
       </div>
     </div>
