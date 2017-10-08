@@ -24,7 +24,7 @@
         <div class="card-body">
           <ul class="list-group">
           {{range .Users}}
-            <li class="list-group-item">{{.ID}}. {{.Name}} agreed to bring {{.Food}} at {{.CreatedAt}}</li>
+            <li class="list-group-item">{{.ID}}. {{.Name}} agreed to bring {{.Food}} on {{.CreatedAt.Format "Monday, 1/02/06"}}</li>
           {{end}}
           </ul>
         </div>
