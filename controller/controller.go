@@ -11,11 +11,11 @@ var (
 )
 
 func Init(templates map[string]*template.Template) {
+	http.HandleFunc("/favicon.ico", handleFavicon)
 	indexController.indexTemplate = templates["index.html"]
 	indexController.registerRoutes()
 	signupController.signupTemplate = templates["signup.html"]
 	signupController.registerRoutes()
-	http.HandleFunc("/favicon.ico", handleFavicon)
 	http.Handle("/css/", http.FileServer(http.Dir("public")))
 	http.Handle("/images/", http.FileServer(http.Dir("public")))
 }
