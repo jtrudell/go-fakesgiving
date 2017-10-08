@@ -26,7 +26,7 @@
         <div class="card-body">
           <ul class="list-group">
           {{range .Users}}
-            <li class="list-group-item">{{.ID}}. {{.Name}} agreed to bring {{.Food}} on {{.CreatedAt.Format "Monday, 1/02/06"}}</li>
+          <li class="list-group-item"><span class="text-success font-weight-bold">{{.Name}}</span> signed up to bring <span class="text-success font-weight-bold">{{.Food}}</span> on {{.CreatedAt.Format "Monday, 1/02/06"}}</li>
           {{end}}
           </ul>
         </div>
