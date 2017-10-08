@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+var imageurl = "/images/thanksgiving_giphy.gif"
+
 type Base struct {
 	Title    string
 	ImageUrl string
@@ -25,11 +27,14 @@ type GiphyResponse struct {
 }
 
 func NewBase() Base {
-	giphy := getGif()
-	randIndex := rand.Intn(len(giphy.Data))
+	if os.Getenv("GIPHY_API_KEY") != "" {
+		giphy := getGif()
+		randIndex := rand.Intn(len(giphy.Data))
+		imageurl = "https://media1.giphy.com/media/" + giphy.Data[randIndex].Id + "/giphy.gif"
+	}
 	return Base{
 		Title:    fmt.Sprintf("Fakesgiving %v", time.Now().Year()),
-		ImageUrl: "https://media1.giphy.com/media/" + giphy.Data[randIndex].Id + "/giphy.gif",
+		ImageUrl: imageurl,
 	}
 }
 

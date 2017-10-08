@@ -17,6 +17,7 @@ func Init(templates map[string]*template.Template) {
 	signupController.registerRoutes()
 	http.HandleFunc("/favicon.ico", handleFavicon)
 	http.Handle("/css/", http.FileServer(http.Dir("public")))
+	http.Handle("/images/", http.FileServer(http.Dir("public")))
 }
 
 func handleFavicon(w http.ResponseWriter, r *http.Request) {
